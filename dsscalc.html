@@ -1,0 +1,148 @@
+
+<!DOCTYPE html>
+<html>
+<body>
+    <h1>Dubbelspel rating berekenen</h1>
+    <h2>Vul rating in:</h2>
+    <h3><i>Winnaar</h3>
+    <input id="numb" onkeyup="myFunction()">
+    <input id="numb2"onkeyup="myFunction()">
+    <h3>Verliezer</i></h3>
+    <input id="numb3"onkeyup="myFunction()">
+    <input id="numb4"onkeyup="myFunction()">
+<p>
+<div></div>
+
+
+<button type="button" onclick="help()">Help</button>
+
+<p id="notification1"></p>
+<p id="notification2"></p>
+<p id="notification3"></p>
+<p id="notification4"></p>
+
+<script>
+function myFunction() {
+    var a1, a2, b1, b2, text, text2, text, text4, validgame, validinput;
+    debug = false;
+    a1 = parseFloat(document.getElementById("numb").value);
+    a2 = parseFloat(document.getElementById("numb2").value);
+    b1 = parseFloat(document.getElementById("numb3").value);
+    b2 = parseFloat(document.getElementById("numb4").value);
+    //average rating of team a:
+    var a3 = (a1 + a2)/2;
+    //average rating of team b:
+    var b3 = (b1 + b2)/2;
+    //difference in average team ratings
+    var teamdiff = Math.abs(a3 - b3);
+    //difference within team A
+    var adiff = Math.abs(a1-a2);
+    //difference within team B
+    var bdiff = Math.abs(b1-b2);
+    //total team difference
+    var abdiff = adiff + bdiff;
+    //does game count for DSS
+    var validgame = false;
+    //are fields filled in correctly
+    var validinput = true;
+
+    if (isNaN(a1) || a1 < 1 || a1 > 10) {
+        text3 = ("Invoer van speler 1 winnaars is ongeldig");
+        validinput = false;
+    } else if (document.getElementById("numb").value == "" || document.getElementById("numb2").value == "" || document.getElementById("numb3").value == "" || document.getElementById("numb4").value == ""){
+        text3 = ""
+        validinput = false;
+    }else if (isNaN(a2) || a2 < 1 || a2 > 10) {
+    	text3 = ("Invoer van speler 2 winaars is ongeldig");
+        validinput = false;
+    } else if (isNaN(b1) || b1 < 1 || b1 > 10) {
+        text3 = ("Invoer van speler 1 van verliezers is ongeldig");
+        validinput = false;
+    } else if (isNaN(b2) || b2 < 1 || b2 > 10) {
+        text3 = ("Invoer van speler 2 van verliezers is ongeldig");
+        validinput = false;
+    } else if (a1 - a2 > 2.5 || a2 - a1 > 2.5) {
+        text3 = "Onderling verschil winnaars is groter dan 2,5";
+        validinput = false;
+    } else if (b1 - b2 > 2.5 || b2 - b1 > 2.5) {
+        text3 = "Onderling verschil verliezers is groter dan 2,5";
+        validgame = 0;
+    } else if (teamdiff > 2) {
+        text3 = ("Verschil gemiddelde rating teams is te groot (" + teamdiff + ")");
+        validgame = 0;
+    } else if (a1- a2 > 1.5 || a2 - a1 > 1.5) {
+        var c = b3
+        var d = a3
+        var validgame = true;
+        text3 = "Uitleg: Verschil rating winnaars is tussen 1,5 en 2,5"
+            if (abdiff<2.5) {text3 += " en verschil tussen beide partijen opgeteld minder dan 2,5. Eigen rating min of plus 0.5";
+                c = ("rating speler 1 = " + (a1-0.5) + " en rating speler 2 = " + (a2-0.5))
+                d = ("rating speler 1 = " + (b1+0.5) + " en rating speler 2 = " + (b2+0.5))}
+            else if (abdiff>2.5) { 
+                    text3 += " en verschil tussen beide partijen opgeteld meer dan 2.5 "
+                    if (b3>a3) {
+                        text3 += "Sterkste partij heeft gewonnen. "
+                        validgame = false; }    
+                        else {
+                        text3 += "Zwakste partij heeft gewonnen, eigen rating plus of min 1."
+                        c = ("rating speler 1 = " + (a1-1) + " en rating speler 2 = " + (a2-1))
+                        d = ("rating speler 1 = " + (b1+1) + " en rating speler 2 = " + (b2+1))
+                    }
+                }
+            else {
+                    text3 = "Computer says no"
+                }
+    } else if (abdiff > 1.5){
+            validgame = true;
+            text3 = "Verschil tussen beide combinaties opgeteld is groter dan 1,5.  "
+                if (b3>a3) {
+                        text3 += "Sterkste partij heeft gewonnen. "
+                        validgame = false; }    
+                        else {
+                        text3 += "Zwakste partij heeft gewonnen. Gemiddelde rating tegestanders plus of min 1."
+                        c = (b3-1)
+                        d = (a3+1)
+                    }
+    } else if (adiff >1 ||   bdiff > 1) {
+        text3 = "Onderling verschil ratings binnen team groter dan 1";
+        validgame = true;
+        if (b3>a3) { 
+            text3 += " en sterkste partij heeft gewonnen. Eigen rating plus of min 0.5"
+        c = ("rating speler 1 = " + (a1-0.5) + " en rating speler 2 = " + (a2-0.5))
+        d = ("rating speler 1 = " + (b1+0.5) + " en rating speler 2 = " + (b2+0.5))
+    } else if (a3>b3) {
+        text3 += " en zwakste partij heeft gewonnen. Eigen rating plus of min 1"
+        c = ("rating speler 1 = " + (a1-1) + " en rating speler 2 = " + (a2-1))
+        d = ("rating speler 1 = " + (b1+1) + " en rating speler 2 = " + (b2+1))
+    }
+    } else {
+        var c = b3 - 1
+        var d = a3 + 1
+        validgame = true;
+        text3 = "Normale wedstrijd, eigen gemiddelde teamrating plus of min 1"
+    }
+    var text4 =("teamdiff = " + teamdiff + " a3=" + a3 + " b3= " + b3 + " validgame = " + validgame + " adiff= " + adiff + " bdiff = " + bdiff + " abdiff =" + abdiff)
+    if (validgame == true) {
+        text = ("Uitslag winnaar: " + c);
+        text2 = ("Uitslag verliezer: " + d);
+    } else if (validinput == false) {
+        text = ""
+        text2 = ""
+    } else {
+        text = "Wedstrijd ongeldig"
+        text2 = "Telt niet mee voor rating"
+    }
+    document.getElementById("notification1").innerHTML = text;
+    document.getElementById("notification2").innerHTML = text2;
+    document.getElementById("notification3").innerHTML = text3;  
+    if (debug == true){
+    document.getElementById("notification4").innerHTML = text4; 
+    } 
+}
+function help () { 
+alert("Vul alle velden. Gebruik cijfers en punten (5.2123)")}
+
+</script>
+
+</body>
+</html> 
